@@ -10,6 +10,8 @@ const qs = require(webConstants.QUERY_STRING_MODULE);
 const fs = require(webConstants.FS_MODULE);
 const url = require(webConstants.URL_MODULE);
 const path = require(webConstants.PATH_MODULE);
+const multiparty = require(webConstants.MULTIPARTY_MODULE);
+const shortid = require(webConstants.SHORTID_MODULE);
 
 module.exports = (req, res) => {
     req.pathname = req.pathname || url.parse(req.url).pathname;
@@ -26,18 +28,68 @@ module.exports = (req, res) => {
             baseHandler.handleOk(req, res, data);
         });
     } else if (req.pathname == webConstants.PRODUCT_URL && req.method == webConstants.HTTP_POST) {
-        let dataStr = '';
+        let form = new multiparty.Form();
 
-        req.on(webConstants.EVENT_TYPE_DATA, (data) => {
-            dataStr += data;
+        let product;
+
+        form.on(webConstants.EVENT_TYPE_PATH, (part) => {
+            if (part.filename) {
+                let dataStr = '';
+
+                part.setEncoding(webConstants.BINARY_STR);
+
+                part.on(webConstants.EVENT_TYPE_DATA, (data) => {
+                    dataStr += data;
+                });
+
+                part.end(webConstants.EVENT_TYPE_DATA, () => {
+                    let fileName = shortid.generate();
+                    console.log(fileName);
+                    let filePath = __dirname.concat(fileName);
+                    console.log(filePath);
+
+                    product.image = filePath;
+
+                    fs.writeFile(`${filePath}`, dataStr, {encoding: webConstants.ASCII_STR}, (err) = {
+                        if(err) {
+                            console.log(err);
+                            return;
+                        }
+                    });
+                });
+            } else {
+                part.setEncoding(webConstants.ENCODING_UTF_8);
+
+                let field = webConstants.EMTPY_STR;
+
+                part.on(webConstants.EVENT_TYPE_DATA, (data) => {
+                    field += data;
+                });
+
+                part.end(webConstants.EVENT_TYPE_END, () => {
+                    product[part.name] = field;
+                });
+            }
         });
-        console.log(dataStr);
-        req.on(webConstants.EVENT_TYPE_END, () => {
-            let product = qs.parse(dataStr);
-            db.products.add(product);
 
+        form.on('close', () => {
+            db.products.add(product);
             baseHandler.handleFound(req, res);
         });
+
+
+        /*let dataStr = '';
+
+         req.on(webConstants.EVENT_TYPE_DATA, (data) => {
+         dataStr += data;
+         });
+
+         req.on(webConstants.EVENT_TYPE_END, () => {
+         let product = qs.parse(dataStr);
+         db.products.add(product);
+
+         baseHandler.handleFound(req, res);
+         });*/
     } else {
         return true;
     }

@@ -13,6 +13,7 @@ const PREVIOUS_EXT = '/../';
 
 //events
 const EVENT_TYPE_DATA = 'data';
+const EVENT_TYPE_PATH = 'path';
 const EVENT_TYPE_END = 'end';
 
 //content types
@@ -29,6 +30,8 @@ const URL_MODULE = 'url';
 const FS_MODULE = 'fs';
 const QUERY_STRING_MODULE = 'querystring';
 const PATH_MODULE = 'path';
+const MULTIPARTY_MODULE = 'multiparty';
+const SHORTID_MODULE = 'shortid';
 
 //handler paths
 const BASE_HANDLER_PATH = './base';
@@ -38,10 +41,17 @@ const PRODUCT_HANDLER_PATH = './product';
 const INDEX_HANDLER_PATH = './handler/index';
 
 const DB_PATH = '../config/database';
+const DB_JSON_PATH = './db.json';
+
+//files
+const DB_JSON_FILE_NAME = 'db.json';
 
 //strings
+
+const BINARY_STR = 'binary';
 const NOT_FOUND_STR = '<h2 style="color: red;">404 Not Found !</h2>';
 const EMTPY_STR = '';
+const ASCII_STR = 'ascii';
 const CONTENT_STR = '{content}';
 
 //http status
@@ -57,6 +67,10 @@ const HTTP_POST = 'POST';
 const HOME_URL = '/';
 const CONTENT_URL = '/content/';
 const PRODUCT_URL = '/product/add';
+
+//encoding
+const ENCODING_UTF_8 = 'utf-8';
+
 
 module.exports = {
     SERVER_PORT,
@@ -84,12 +98,15 @@ module.exports = {
     //strings
     NOT_FOUND_STR,
     EMTPY_STR,
+    ASCII_STR,
     CONTENT_STR,
     //modules
     URL_MODULE,
     QUERY_STRING_MODULE,
     FS_MODULE,
     PATH_MODULE,
+    SHORTID_MODULE,
+    MULTIPARTY_MODULE,
     //extension
     CSS_EXT,
     ICO_EXT,
@@ -100,7 +117,13 @@ module.exports = {
     HTML_CONTENT_TYPE,
     //db
     DB_PATH,
+    DB_JSON_PATH,
     //events
     EVENT_TYPE_DATA,
-    EVENT_TYPE_END
+    EVENT_TYPE_END,
+    EVENT_TYPE_PATH,
+    //files
+    DB_JSON_FILE_NAME,
+    //encoding
+    ENCODING_UTF_8
 };
