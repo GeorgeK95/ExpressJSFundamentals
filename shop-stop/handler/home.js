@@ -25,7 +25,7 @@ module.exports = (req, res) => {
             }
 
             let queryData = qs.parse(url.parse(req.url).query);
-            let products = db.products.getAll();
+            let products = db.products.getAll;
             let targetStr = queryData.query;
 
             if (targetStr) {

@@ -24,7 +24,7 @@ module.exports.products.findProductByName = (name) => {
 };
 
 function getProducts() {
-    if (!dbJsonPath) {
+    if (!fs.existsSync(dbJsonPath)) {
         fs.appendFile(webConstants.DB_JSON_FILE_NAME, webConstants.EMTPY_STR, function (err) {
             if (err) throw err;
         });
@@ -41,5 +41,5 @@ function getProducts() {
 
 function saveProducts(products) {
     let json = JSON.stringify(products);
-    fs.writeFileSync(dbJsonPath, json);
+    // fs.writeFileSync(dbJsonPath, json);
 }

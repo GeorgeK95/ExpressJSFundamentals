@@ -13,8 +13,9 @@ const PREVIOUS_EXT = '/../';
 
 //events
 const EVENT_TYPE_DATA = 'data';
-const EVENT_TYPE_PATH = 'path';
+const EVENT_TYPE_PART = 'part';
 const EVENT_TYPE_END = 'end';
+const EVENT_TYPE_CLOSE = 'close';
 
 //content types
 const CSS_CONTENT_TYPE = 'text/css';
@@ -47,7 +48,6 @@ const DB_JSON_PATH = './db.json';
 const DB_JSON_FILE_NAME = 'db.json';
 
 //strings
-
 const BINARY_STR = 'binary';
 const NOT_FOUND_STR = '<h2 style="color: red;">404 Not Found !</h2>';
 const EMTPY_STR = '';
@@ -97,6 +97,7 @@ module.exports = {
     PRODUCT_HANDLER_PATH,
     //strings
     NOT_FOUND_STR,
+    BINARY_STR,
     EMTPY_STR,
     ASCII_STR,
     CONTENT_STR,
@@ -121,7 +122,8 @@ module.exports = {
     //events
     EVENT_TYPE_DATA,
     EVENT_TYPE_END,
-    EVENT_TYPE_PATH,
+    EVENT_TYPE_CLOSE,
+    EVENT_TYPE_PART,
     //files
     DB_JSON_FILE_NAME,
     //encoding

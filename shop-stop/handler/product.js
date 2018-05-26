@@ -28,11 +28,12 @@ module.exports = (req, res) => {
             baseHandler.handleOk(req, res, data);
         });
     } else if (req.pathname == webConstants.PRODUCT_URL && req.method == webConstants.HTTP_POST) {
-        let form = new multiparty.Form();
-
         let product;
 
-        form.on(webConstants.EVENT_TYPE_PATH, (part) => {
+        let form = new multiparty.Form();
+        form.parse(req);
+
+        form.on(webConstants.EVENT_TYPE_PART, (part) => {
             if (part.filename) {
                 let dataStr = '';
 
@@ -42,15 +43,13 @@ module.exports = (req, res) => {
                     dataStr += data;
                 });
 
-                part.end(webConstants.EVENT_TYPE_DATA, () => {
+                part.on(webConstants.EVENT_TYPE_END, () => {
                     let fileName = shortid.generate();
-                    console.log(fileName);
                     let filePath = __dirname.concat(fileName);
-                    console.log(filePath);
 
                     product.image = filePath;
 
-                    fs.writeFile(`${filePath}`, dataStr, {encoding: webConstants.ASCII_STR}, (err) = {
+                    fs.writeFile(`.${filePath}`, dataStr, {encoding: webConstants.ASCII_STR}, (err) = {
                         if(err) {
                             console.log(err);
                             return;
@@ -66,17 +65,16 @@ module.exports = (req, res) => {
                     field += data;
                 });
 
-                part.end(webConstants.EVENT_TYPE_END, () => {
+                part.on(webConstants.EVENT_TYPE_END, () => {
                     product[part.name] = field;
                 });
             }
         });
 
-        form.on('close', () => {
+        form.on(webConstants.EVENT_TYPE_CLOSE, () => {
             db.products.add(product);
             baseHandler.handleFound(req, res);
         });
-
 
         /*let dataStr = '';
 
