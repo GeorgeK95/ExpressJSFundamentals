@@ -1,0 +1,12 @@
+{
+  "name": "Web-Server-MovieDB",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "keywords": [],
+  "author": "GK",
+  "license": "MIT"
+}
