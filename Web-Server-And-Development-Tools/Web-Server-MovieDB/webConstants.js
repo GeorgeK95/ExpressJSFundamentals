@@ -31,7 +31,8 @@ const HTML_CONTENT_TYPE = 'text/html';
 //html paths
 const HOME_HTML_PATH = '/views/home.html';
 const MOVIE_DETAILS_HTML_PATH = 'views/details.html';
-const ALL_MOVIES_PATH = '/views/viewAll.html';
+const ALL_MOVIES_HTML_PATH = '/views/viewAll.html';
+const STATUS_HTML_PATH = 'views/status.html';
 const PRODUCT_HTML_PATH = '../view/product/add.html';
 const ADD_MOVIE_HTML_PATH = 'views/addMovie.html';
 const VIEW_ALL_MOVIES_HTML_PATH = 'views/viewAll.html';
@@ -51,6 +52,7 @@ const VIEW_ALL_MOVIES_HANDLER_PATH = './viewAllMovies';
 const MOVIE_DETAILS_HANDLER_PATH = './details';
 const HOME_HANDLER_PATH = './home';
 const ADD_MOVIE_HANDLER_PATH = './addMovie';
+const HEADER_HANDLER_PATH = './header';
 const CONTENT_FILES_HANDLER_PATH = './content';
 const PRODUCT_HANDLER_PATH = './product';
 const INDEX_HANDLER_PATH = './handlers/index';
@@ -72,6 +74,9 @@ const YEAR_STR = '{{YEAR}}';
 const MOVIE_INDEX_STR = '{{MOVIE_INDEX}}';
 const ADD_MOVIE_STR = 'addMovie';
 const VIEW_ALL_MOVIES_STR = 'viewAllMovies';
+const REPLACE_ME_STR = '{{replaceMe}}';
+const STATUS_HEADER_STR = 'status-header';
+const STATUS_HEADER_VALUE_FULL_STR = 'Full';
 
 const MOVIE_POSTER_STR = '{{MOVIE_POSTER}}';
 const MOVIE_TITLE_STR = '{{MOVIE_TITLE}}';
@@ -128,7 +133,8 @@ module.exports = {
     //html paths
     HOME_HTML_PATH,
     MOVIE_DETAILS_HTML_PATH,
-    ALL_MOVIES_PATH,
+    ALL_MOVIES_HTML_PATH,
+    STATUS_HTML_PATH,
     PRODUCT_HTML_PATH,
     ADD_MOVIE_HTML_PATH,
     VIEW_ALL_MOVIES_HTML_PATH,
@@ -140,6 +146,7 @@ module.exports = {
     HOME_HANDLER_PATH,
     ADD_MOVIE_HANDLER_PATH,
     CONTENT_FILES_HANDLER_PATH,
+    HEADER_HANDLER_PATH,
     PRODUCT_HANDLER_PATH,
     //strings
     NOT_FOUND_STR,
@@ -152,6 +159,9 @@ module.exports = {
     MOVIE_INDEX_STR,
     ADD_MOVIE_STR,
     VIEW_ALL_MOVIES_STR,
+    REPLACE_ME_STR,
+    STATUS_HEADER_STR,
+    STATUS_HEADER_VALUE_FULL_STR,
     MOVIE_POSTER_STR,
     MOVIE_TITLE_STR,
     MOVIE_YEAR,

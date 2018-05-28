@@ -31,20 +31,6 @@ module.exports = (req, res) => {
         replacement = replacement.replace(webConstants.MOVIE_YEAR, `${targetMovie.movieYear}`);
         replacement = replacement.replace(webConstants.MOVIE_DESCRIPTION_STR, `${targetMovie.movieDescription}`);
 
-        console.log(replacement);
-
-        /*for (let movie of db) {
-         let replacement = webConstants.MOVIE_DETAILS_TEMPLATE;
-         let toReplace = webConstants.REPLACE_ME_TEMPLATE;
-
-         replacement = replacement.replace(webConstants.MOVIE_POSTER_STR, `${movie.moviePoster}`);
-         replacement = replacement.replace(webConstants.MOVIE_TITLE_STR, `${movie.movieTitle}`);
-         replacement = replacement.replace(webConstants.MOVIE_YEAR, `${movie.movieYear}`);
-         replacement = replacement.replace(webConstants.MOVIE_DESCRIPTION_STR, `${movie.movieDescription}`);
-
-         moviesHtml += replacement;
-         }*/
-
         __parentDirname += webConstants.MOVIE_DETAILS_HTML_PATH;
 
         fs.readFile(__parentDirname, (err, data) => {
