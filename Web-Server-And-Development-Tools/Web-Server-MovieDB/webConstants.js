@@ -14,6 +14,13 @@ const JPG_EXT = '.jpg';
 const PNG_EXT = '.png';
 const PREVIOUS_EXT = '/../';
 
+//gulp task constants
+const GULP = 'gulp';
+const HTML_MIN_GULP = 'gulp-htmlmin';
+const MINIFY_HTML_GULP = 'minify-html';
+const VIEWS_DIR_GULP = './views/*.html';
+const MINIFIED_DIR_GULP = './minifiedViews';
+
 //events
 const EVENT_TYPE_DATA = 'data';
 const EVENT_TYPE_PART = 'part';
@@ -64,6 +71,7 @@ const DB_JSON_PATH = './db.json';
 const DB_JSON_FILE_NAME = 'db.json';
 
 //strings
+const DEFAULT_STR = 'default';
 const BINARY_STR = 'binary';
 const NOT_FOUND_STR = '<h2 style="color: red;">404 Not Found !</h2>';
 const EMTPY_STR = '';
@@ -151,6 +159,7 @@ module.exports = {
     //strings
     NOT_FOUND_STR,
     BINARY_STR,
+    DEFAULT_STR,
     EMTPY_STR,
     ASCII_STR,
     public_STR,
@@ -191,6 +200,12 @@ module.exports = {
     //db
     DB_PATH,
     DB_JSON_PATH,
+    //gulp task constants
+    GULP,
+    HTML_MIN_GULP,
+    MINIFY_HTML_GULP,
+    VIEWS_DIR_GULP,
+    MINIFIED_DIR_GULP,
     //events
     EVENT_TYPE_DATA,
     EVENT_TYPE_END,
