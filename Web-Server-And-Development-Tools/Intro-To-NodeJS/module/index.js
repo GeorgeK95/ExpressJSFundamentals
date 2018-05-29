@@ -4,7 +4,7 @@
 
 const storage = require('./storage');
 
-
+//success
 storage.load()
 storage.put('first', 'firstValue')
 storage.put('second', 'secondValue')
@@ -14,8 +14,25 @@ console.log(storage.get('first'))
 console.log(storage.getAll())
 storage.delete('second')
 storage.update('first', 'updatedFirst')
-// storage.save()
-storage.clear()
-console.log(storage.getAll())
-storage.load()
-console.log(storage.getAll())
+
+storage.save()
+    .then(() => {
+        storage.clear()
+        console.log(storage.getAll())
+        storage.load()
+            .then(() => {
+                console.log(storage.getAll())
+            })
+    })
+
+
+//errors
+/*storage.put('first','firstValue')
+ storage.put('second','secondValue')
+ storage.delete('second')
+ storage.delete('second')
+
+ storage.put(2,'someValue')
+
+ storage.put('cat','dog')
+ storage.put('cat','anotherDog')*/

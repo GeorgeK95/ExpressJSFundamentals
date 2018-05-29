@@ -11,33 +11,29 @@ exports.dictionary = dictionary;
 exports.put = function (key, value) {
     if (typeof key === 'string' || key instanceof String) {
         if (key in dictionary) {
-            throw  `'${key}' already defined.`;
-            // console.log();
-            // return;
+            throw `'${key}' already defined.`;
         }
 
         dictionary[key] = value;
     } else {
-        throw 'Key is not in proper format./require string/';
+        throw new Error('Key is not in proper format./string required/');
     }
 };
 
 exports.get = function (key) {
     if (typeof key === 'string' || key instanceof String) {
         if (key in dictionary === false) {
-            console.log(`'${key}' was not found.`);
-            return;
+            throw `'${key}' was not found.`;
         }
         return dictionary[key];
     } else {
-        console.log('Key is not in proper format./require string/');
+        throw new Error('Key is not in proper format./string required/');
     }
 };
 
 exports.getAll = function () {
     if (Object.keys(dictionary).length == 0) {
-        console.log('There is no data in collection.');
-        return;
+        return 'There are no items in the storage!';
     }
     return dictionary;
 };
@@ -49,10 +45,9 @@ exports.update = function (key, value) {
             return;
         }
 
-        console.log(`'${key}' is not defined.`);
-
+        throw new Error(`'${key}' is not defined.`);
     } else {
-        console.log('Key is not in proper format./require string/');
+        throw new Error('Key is not in proper format./string required/');
     }
 };
 
@@ -63,9 +58,9 @@ exports.delete = function (key) {
             return;
         }
 
-        throw `'${key}' is not defined.`;
+        throw new Error(`'${key}' is not defined.`);
     } else {
-        throw 'Key is not in proper format./require string/';
+        throw new Error('Key is not in proper format./string required/');
     }
 };
 
@@ -74,32 +69,29 @@ exports.clear = function () {
 };
 
 exports.save = function () {
-    if (!fs.existsSync('../data/storage.json')) {
-        fs.appendFile('storage.json', '{}', function (err) {
-            if (err) throw err;
-
-            console.log('Storage.json created.');
+    return new Promise((resolve, reject) => {
+        let content = fs.writeFile('../data/storage.json', JSON.stringify(dictionary), (err, content) => {
+            if (err) {
+                throw new Error(err.message);
+            }
+            console.log("File saved !");
+            resolve();
         });
-    }
-
-    fs.writeFile('../data/storage.json', JSON.stringify(dictionary), function (err) {
-        if (err) return console.log(err);
-
-        console.log("The file was saved !");
     });
 };
 
 exports.load = function () {
-    if (!fs.existsSync('../data/storage.json')) {
-        console.log('Storage.json does not exist !');
-        return;
-    }
+    return new Promise((resolve, reject) => {
+        let content = fs.readFile(__dirname + '/../data/storage.json', 'utf8', (err, content) => {
+            if (err) {
+                content = {};
+            } else {
+                content = JSON.parse(content);
+            }
 
-    let str = fs.readFileSync(__dirname + '/../data/storage.json', 'utf8');
-    str = JSON.parse(str);
+            dictionary = content;
 
-    Object.keys(str).forEach(function (key) {
-        dictionary[key] = str[key];
+            resolve();
+        });
     });
-
 };
