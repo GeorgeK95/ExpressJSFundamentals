@@ -11,6 +11,14 @@ const CSS_EXT = '.css';
 const ICO_EXT = '.ico';
 const PREVIOUS_EXT = '/../';
 
+//gulp task constants
+const GULP = 'gulp';
+const CLEAN_CSS_GULP = 'gulp-clean-css';
+const MINIFY_CSS_GULP = 'minify-css';
+const CSS_FILES_DIR_GULP = './content/style/*.css';
+const CSS_DIR_GULP = './content/style';
+const RENAME_GULP = 'gulp-rename';
+
 //events
 const EVENT_TYPE_DATA = 'data';
 const EVENT_TYPE_PART = 'part';
@@ -127,5 +135,12 @@ module.exports = {
     //files
     DB_JSON_FILE_NAME,
     //encoding
-    ENCODING_UTF_8
+    ENCODING_UTF_8,
+    //gulp task constants
+    GULP,
+    CLEAN_CSS_GULP,
+    CSS_DIR_GULP,
+    RENAME_GULP,
+    MINIFY_CSS_GULP,
+    CSS_FILES_DIR_GULP
 };
