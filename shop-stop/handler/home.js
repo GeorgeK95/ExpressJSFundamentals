@@ -25,26 +25,30 @@ module.exports = (req, res) => {
             }
 
             let queryData = qs.parse(url.parse(req.url).query);
-            let products = db.products.getAll;
-            let targetStr = queryData.query;
 
-            if (targetStr) {
-                products = products.filter(p => p.name.includes(targetStr));
-            }
+            db.products.getAll.then(function (result) {
+                let targetStr = queryData.query;
 
-            let content = '';
+                if (targetStr) {
+                    result = result.filter(p => p.name.includes(targetStr));
+                }
 
-            for (let product of products) {
-                content +=
-                    `<div class ="product-card"> 
+                let content = '';
+                for (let product of result) {
+                    content +=
+                        `<div class ="product-card"> 
                       <img class="product-img" src="${product.image}">
                       <h2>${product.name}</h2>
                       <p>${product.description}</p>
                      </div>`;
-            }
+                }
 
-            let html = data.toString().replace(webConstants.CONTENT_STR, content);
-            baseHandler.handleOk(req, res, html);
+                let html = data.toString().replace(webConstants.CONTENT_STR, content);
+                baseHandler.handleOk(req, res, html);
+
+            }, function (err) {
+                console.log(err);
+            });
         });
     } else {
         return true;

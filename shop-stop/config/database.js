@@ -24,22 +24,27 @@ module.exports.products.findProductByName = (name) => {
 };
 
 function getProducts() {
-    if (!fs.existsSync(dbJsonPath)) {
-        fs.appendFile(webConstants.DB_JSON_FILE_NAME, webConstants.EMTPY_STR, function (err) {
-            if (err) throw err;
+    return new Promise(function (resolve, reject) {
+        // Do async job
+        fs.readFile(dbJsonPath, webConstants.ENCODING_UTF_8, (err, data) => {
+            if (err) {
+                return console.log(err);
+            }
+
+            resolve(JSON.parse(data));
         });
-
-        fs.writeFileSync(dbJsonPath, '[]');
-        return [];
-    }
-
-    let json = fs.readFileSync(dbJsonPath).toString() || '[]';
-    let products = JSON.parse(json);
-
-    return products;
+    })
 }
 
-function saveProducts(products) {
-    let json = JSON.stringify(products);
-    // fs.writeFileSync(dbJsonPath, json);
-}
+module.exports.products.saveProducts = (product) => {
+
+    getProducts().then(function (result) {
+        result.push(product);
+        result = JSON.stringify(result);
+
+        fs.writeFile(dbJsonPath, result, function (err) {
+            if (err) return console.log(err);
+        });
+    });
+
+};

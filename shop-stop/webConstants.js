@@ -39,6 +39,8 @@ const URL_MODULE = 'url';
 const FS_MODULE = 'fs';
 const QUERY_STRING_MODULE = 'querystring';
 const PATH_MODULE = 'path';
+const FORMIDABLE_MODULE = 'formidable';
+const MV_MODULE = 'mv';
 const MULTIPARTY_MODULE = 'multiparty';
 const SHORTID_MODULE = 'shortid';
 
@@ -51,6 +53,7 @@ const INDEX_HANDLER_PATH = './handler/index';
 
 const DB_PATH = '../config/database';
 const DB_JSON_PATH = './db.json';
+const CONTENT_IMAGE_PATH = '/../content/image/';
 
 //files
 const DB_JSON_FILE_NAME = 'db.json';
@@ -58,13 +61,15 @@ const DB_JSON_FILE_NAME = 'db.json';
 //strings
 const BINARY_STR = 'binary';
 const NOT_FOUND_STR = '<h2 style="color: red;">404 Not Found !</h2>';
-const EMTPY_STR = '';
+const EMPTY_STR = '';
+const DOT_STR = '.';
 const ASCII_STR = 'ascii';
 const CONTENT_STR = '{content}';
 
 //http status
 const STATUS_OK = 200;
-const STATUS_FOUND = 302;
+const STATUS_CREATED = 201;
+const STATUS_SEE_OTHER = 303;
 const STATUS_NOT_FOUND = 404;
 
 //http method
@@ -84,8 +89,9 @@ module.exports = {
     SERVER_PORT,
     //status
     STATUS_OK,
+    STATUS_CREATED,
     STATUS_NOT_FOUND,
-    STATUS_FOUND,
+    STATUS_SEE_OTHER,
     //url
     HOME_URL,
     PRODUCT_URL,
@@ -106,7 +112,8 @@ module.exports = {
     //strings
     NOT_FOUND_STR,
     BINARY_STR,
-    EMTPY_STR,
+    EMPTY_STR,
+    DOT_STR,
     ASCII_STR,
     CONTENT_STR,
     //modules
@@ -114,6 +121,8 @@ module.exports = {
     QUERY_STRING_MODULE,
     FS_MODULE,
     PATH_MODULE,
+    FORMIDABLE_MODULE,
+    MV_MODULE,
     SHORTID_MODULE,
     MULTIPARTY_MODULE,
     //extension
@@ -127,6 +136,7 @@ module.exports = {
     //db
     DB_PATH,
     DB_JSON_PATH,
+    CONTENT_IMAGE_PATH,
     //events
     EVENT_TYPE_DATA,
     EVENT_TYPE_END,

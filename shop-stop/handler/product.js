@@ -6,12 +6,14 @@ const webConstants = require('../webConstants');
 const baseHandler = require(webConstants.BASE_HANDLER_PATH);
 const db = require(webConstants.DB_PATH);
 
-const qs = require(webConstants.QUERY_STRING_MODULE);
+// const qs = require(webConstants.QUERY_STRING_MODULE);
 const fs = require(webConstants.FS_MODULE);
 const url = require(webConstants.URL_MODULE);
 const path = require(webConstants.PATH_MODULE);
-const multiparty = require(webConstants.MULTIPARTY_MODULE);
+// const multiparty = require(webConstants.MULTIPARTY_MODULE);
+const formidable = require(webConstants.FORMIDABLE_MODULE);
 const shortid = require(webConstants.SHORTID_MODULE);
+const mv = require(webConstants.MV_MODULE);
 
 module.exports = (req, res) => {
     req.pathname = req.pathname || url.parse(req.url).pathname;
@@ -28,66 +30,34 @@ module.exports = (req, res) => {
             baseHandler.handleOk(req, res, data);
         });
     } else if (req.pathname == webConstants.PRODUCT_URL && req.method == webConstants.HTTP_POST) {
-        let product;
+        let form = new formidable.IncomingForm();
 
-        let form = new multiparty.Form();
-        form.parse(req);
-
-        form.on(webConstants.EVENT_TYPE_PART, (part) => {
-            if (part.filename) {
-                let dataStr = '';
-
-                part.setEncoding(webConstants.BINARY_STR);
-
-                part.on(webConstants.EVENT_TYPE_DATA, (data) => {
-                    dataStr += data;
-                });
-
-                part.on(webConstants.EVENT_TYPE_END, () => {
-                    let fileName = shortid.generate();
-                    let filePath = __dirname.concat(fileName);
-
-                    product.image = filePath;
-
-                    fs.writeFile(`.${filePath}`, dataStr, {encoding: webConstants.ASCII_STR}, (err) = {
-                        if(err) {
-                            console.log(err);
-                            return;
-                        }
-                    });
-                });
-            } else {
-                part.setEncoding(webConstants.ENCODING_UTF_8);
-
-                let field = webConstants.EMTPY_STR;
-
-                part.on(webConstants.EVENT_TYPE_DATA, (data) => {
-                    field += data;
-                });
-
-                part.on(webConstants.EVENT_TYPE_END, () => {
-                    product[part.name] = field;
-                });
+        form.parse(req, function (err, fields, files) {
+            if (err) {
+                console.log(err);
+                return;
             }
+
+            let tempPath = form.openedFiles[0].path;
+            let fileName = form.openedFiles[0].name;
+            let ext = fileName.substr(fileName.lastIndexOf(webConstants.DOT_STR));
+            let imageFolderPath = __dirname.concat([webConstants.CONTENT_IMAGE_PATH + shortid.generate() + ext]);
+
+            mv(tempPath, imageFolderPath, function (err) {
+                if (err) console.log(err);
+            });
+
+            let product = {
+                name: fields.name,
+                description: fields.description,
+                image: imageFolderPath.substr(imageFolderPath.lastIndexOf('/../') + 3),
+            };
+
+            db.products.saveProducts(product);
+
+            baseHandler.handleSeeOther(req, res);
         });
 
-        form.on(webConstants.EVENT_TYPE_CLOSE, () => {
-            db.products.add(product);
-            baseHandler.handleFound(req, res);
-        });
-
-        /*let dataStr = '';
-
-         req.on(webConstants.EVENT_TYPE_DATA, (data) => {
-         dataStr += data;
-         });
-
-         req.on(webConstants.EVENT_TYPE_END, () => {
-         let product = qs.parse(dataStr);
-         db.products.add(product);
-
-         baseHandler.handleFound(req, res);
-         });*/
     } else {
         return true;
     }

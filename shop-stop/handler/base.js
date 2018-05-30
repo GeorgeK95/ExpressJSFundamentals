@@ -8,16 +8,17 @@ function handleOk(req, res, data) {
     handle(req, res, webConstants.STATUS_OK, data);
 }
 
-function handleNotFound(req, res) {
-    handle(req, res, webConstants.STATUS_NOT_FOUND, webConstants.NOT_FOUND_STR);
-}
-function handleFound(req, res) {
-    res.writeHead(webConstants.STATUS_FOUND, {
+function handleSeeOther(req, res) {
+    res.writeHead(webConstants.STATUS_SEE_OTHER, {
+        'Content-Type': getContentType(req.pathname),
         'Location': '/'
     });
 
-    res.write(webConstants.EMTPY_STR);
     res.end();
+}
+
+function handleNotFound(req, res) {
+    handle(req, res, webConstants.STATUS_NOT_FOUND, webConstants.NOT_FOUND_STR);
 }
 
 function handle(req, res, status, data) {
@@ -38,6 +39,5 @@ function getContentType(url) {
 
 module.exports = {
     handleOk,
-    handleFound,
-    handleNotFound
+    handleSeeOther,
 };
