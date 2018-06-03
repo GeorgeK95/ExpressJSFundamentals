@@ -10,7 +10,7 @@ function handleOk(req, res, data) {
 
 function handleSeeOther(req, res) {
     res.writeHead(webConstants.STATUS_SEE_OTHER, {
-        'Content-Type': getContentType(req.pathname),
+        'Content-Type': getContentType(req._parsedUrl.pathname),
         'Location': '/'
     });
 
@@ -23,7 +23,7 @@ function handleNotFound(req, res) {
 
 function handle(req, res, status, data) {
     res.writeHead(status, {
-        'Content-Type': getContentType(req.pathname)
+        'Content-Type': getContentType(req._parsedOriginalUrl.pathname)
     });
 
     res.write(data);
@@ -40,4 +40,5 @@ function getContentType(url) {
 module.exports = {
     handleOk,
     handleSeeOther,
+    handleNotFound
 };

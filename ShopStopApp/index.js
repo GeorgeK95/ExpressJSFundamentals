@@ -1,20 +1,20 @@
 /**
  * Created by George-Lenovo on 5/24/2018.
  */
-
 const webConstants = require('./webConstants');
+
+const express = require(webConstants.EXPRESS_STR);
+
 const http = require(webConstants.HTTP);
 const handlers = require(webConstants.INDEX_HANDLER_PATH);
 
 const env = process.env.NODE_ENV || webConstants.DEVELOPMENT_STR;
 const config = require(webConstants.DB_CONFIG_PATH);
 const db = require(webConstants.DB_PATH);
+let app = express();
 
 db(config[env]);
+require('./config/express')(app, config[env]);
+require('./config/routes')(app);
 
-http.createServer((req, res) => {
-    for (let handler of handlers) {
-        if (!handler(req, res)) break;
-    }
-
-}).listen(webConstants.SERVER_PORT);
+app.listen(webConstants.SERVER_PORT);

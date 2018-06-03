@@ -11,40 +11,30 @@ const formidable = require(webConstants.FORMIDABLE_MODULE);
 
 const Category = require(webConstants.CATEGORY_MODEL_PATH);
 
-module.exports = (req, res) => {
-    req.pathname = req.pathname || url.parse(req.url).pathname;
+module.exports.addGet = (req, res) => {
+    res.render(webConstants.ADD_CATEGORY_VIEW)
+};
 
-    if (req.pathname == webConstants.CATEGORY_ADD_URL && req.method == webConstants.HTTP_GET) {
-        let filePath = path.normalize(path.join(__dirname, webConstants.ADD_CATEGORY_HTML_PATH));
+module.exports.addPost = (req, res) => {
+    let category = req.body;
 
-        fs.readFile(filePath, (err, data) => {
-            if (err) {
-                baseHandler.handleNotFound(req, res);
+    Category.create(category).then(() => {
+        res.redirect(webConstants.HOME_URL)
+    });
+};
+
+module.exports.productsByCategory = (req, res) => {
+    let categoryName = req.params.category;
+
+    Category.findOne({name: categoryName})
+        .populate(webConstants.PRODUCTS_STR)
+        .then((category) => {
+            if (!category) {
+                res.sendStatus(webConstants.STATUS_NOT_FOUND);
                 return;
             }
 
-            baseHandler.handleOk(req, res, data);
-        });
-    } else if (req.pathname == webConstants.CATEGORY_ADD_URL && req.method == webConstants.HTTP_POST) {
-        let form = new formidable.IncomingForm();
+            res.render(webConstants.CATEGORY_PRODUCTS_VIEW, {category: category})
+        })
 
-        form.parse(req, function (err, fields, files) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-
-            let category = {
-                name: fields.name,
-            };
-
-            Category.create(category).then(() => {
-                baseHandler.handleSeeOther(req, res);
-            });
-
-        });
-
-    } else {
-        return true;
-    }
 };
