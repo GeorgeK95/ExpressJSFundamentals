@@ -45,6 +45,7 @@ module.exports = (req, res) => {
             //If the name or the URL are null or empty => return friendly message
 
             let __parentDirname = __dirname + webConstants.PREVIOUS_EXT;
+
             let filePath = path.normalize(path.join(__parentDirname, `${req.pathname}`));
             filePath = filePath.replace(webConstants.ADD_MOVIE_STR, webConstants.EMTPY_STR);
             filePath += webConstants.ADD_MOVIE_HTML_PATH;
@@ -68,11 +69,7 @@ module.exports = (req, res) => {
                 data = data.toString()
                     .replace(webConstants.REPLACE_ME_TEMPLATE, webConstants.SUCCESSFULLY_ADDED_MOVIE_TEMPLATE);
 
-                let filePath = __dirname.concat('/../config/database.js');
-
                 db.push(post);
-
-                // TODO: write to file
 
                 baseHandler.handleCreate(req, res, data);
             });

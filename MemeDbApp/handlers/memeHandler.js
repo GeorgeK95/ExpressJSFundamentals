@@ -6,12 +6,14 @@ const CONTENT_TYPE_HTML = 'text/html';
 const IMAGES_COUNT = 5; //1000
 const DB_PATH = __dirname + '/../db/db.json';
 
-const db = require('../db/db.json');
+let db = require('../db/db.json');
 const fs = require('fs');
 const url = require('url');
 const formidable = require('formidable');
 const shortId = require('shortid');
 const mv = require('mv');
+
+const baseHandler = require('./baseHandler');
 
 module.exports = (req, res) => {
     if (req.pathname === '/viewAllMemes' && req.method === 'GET') {
@@ -56,10 +58,10 @@ function addMeme(req, res) {
                     fs.mkdir(memeStorage, () => {
                         console.log('new folder !');
 
-                        someFunc(lastFolderIndex + 1, ext, tempPath, fields, res)
+                        processMeme(lastFolderIndex + 1, ext, tempPath, fields, res)
                     });
                 } else {
-                    someFunc(lastFolderIndex, ext, tempPath, fields, res)
+                    processMeme(lastFolderIndex, ext, tempPath, fields, res)
                 }
             });
         })
@@ -68,7 +70,7 @@ function addMeme(req, res) {
     })
 }
 
-function someFunc(folderDirectoriesCount, ext, tempPath, fields, res) {
+function processMeme(folderDirectoriesCount, ext, tempPath, fields, res) {
     const imageFullPath = __dirname.concat(
         ['/../public/memeStorage/' + folderDirectoriesCount + '/' + shortId.generate() + ext]
     );
@@ -79,7 +81,7 @@ function someFunc(folderDirectoriesCount, ext, tempPath, fields, res) {
         let meme = {
             id: shortId.generate(),
             title: fields.memeTitle,
-            memeSrc: imageFullPath.substr('E:\\GITHUB\\ExpressJSFundamentals\\MemeDB\\handlers/.'.length),
+            memeSrc: imageFullPath.substr(__dirname.length + 2),
             description: fields.memeDescription,
             privacy: fields.status === undefined ? 'off' : fields.status,
             dateStamp: Date.now()
@@ -95,7 +97,7 @@ function someFunc(folderDirectoriesCount, ext, tempPath, fields, res) {
             json.push(meme)
 
             fs.writeFile(DB_PATH, JSON.stringify(json), () => {
-                responseFound(res, CONTENT_TYPE_HTML, '/');
+                baseHandler.responseFound(res, CONTENT_TYPE_HTML, '/');
             })
         })
     });
@@ -113,33 +115,35 @@ function getDetails(req, res) {
     let currentMemeHtml = `<div class="content">
              <img src="${currentMeme.memeSrc}" alt=""/>
              <h3>Title  ${currentMeme.title}</h3>
-             <p> ${currentMeme.description}</p>
+                 <p> ${currentMeme.description}</p>
              <button><a href="${currentMeme.memeSrc}">Download Meme</a></button>
              </div>`
-
-    // currentMemeHtmlFirstHalf = currentMemeHtml.substr(0, currentMemeHtml.indexOf('</body>'))
-    // currentMemeHtmlSecondHalf = currentMemeHtml.substr(currentMemeHtml.indexOf('</body>') + 1)
-
-    // currentMemeHtmlFirstHalf += '<script src="../public/js/downloadImage.js"></script>'
-
-    // currentMemeHtml = currentMemeHtmlFirstHalf + currentMemeHtmlSecondHalf
 
     processGetRequest(DETAILS_FILE_PATH, currentMemeHtml, res)
 }
 
 function viewAll(req, res) {
-    let replaceContent = '';
 
-    for (let currentMeme of db) {
-        if (currentMeme.privacy !== 'on') continue
+    fs.readFile(__dirname + '/../db/db.json', 'utf-8', (err, data) => {
+        if (err) {
+            console.log(err)
+            return
+        }
 
-        replaceContent += `<div class="meme">
+        db = JSON.parse(data);
+        let replaceContent = '';
+
+        for (let currentMeme of db) {
+            if (currentMeme.privacy !== 'on') continue
+
+            replaceContent += `<div class="meme">
                                <a href="/getDetails?id=${currentMeme.id}">
-                               <img class="memePoster" src="${currentMeme.memeSrc}"/>          
+                               <img class="memePoster" src="${currentMeme.memeSrc}"/>
                                </div>`;
-    }
+        }
 
-    processGetRequest(VIEW_ALL_FILE_PATH, replaceContent, res)
+        processGetRequest(VIEW_ALL_FILE_PATH, replaceContent, res)
+    })
 }
 
 function processGetRequest(pathToFile, replaceContent, res) {
@@ -149,26 +153,9 @@ function processGetRequest(pathToFile, replaceContent, res) {
             return
         }
 
-        if (replaceContent !== '')
-            data = data.toString().replace(REPLACE_ME_STR, replaceContent);
+        if (replaceContent !== '') data = data.toString().replace(REPLACE_ME_STR, replaceContent);
 
-        responseOk(res, CONTENT_TYPE_HTML, data);
+        baseHandler.responseOk(res, CONTENT_TYPE_HTML, data);
     })
 }
 
-function responseFound(res, contentType, location) {
-    res.writeHead(302, {
-        'Content-Type': contentType,
-        'Location': location
-    })
-
-    res.end()
-}
-
-function responseOk(res, contentType, data) {
-    res.writeHead(200, {
-        'Content-Type': contentType
-    })
-
-    res.end(data)
-}

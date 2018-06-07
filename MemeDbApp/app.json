@@ -1,0 +1,5 @@
+{
+	"name": "MemeDb app name",
+	"image": "heroku/nodejs",
+	"repository": "https://github.com/GeorgeK95/MemeDbApp"
+}

@@ -1,5 +1,6 @@
 const fs = require('fs')
 const filePath = './views/home.html'
+const baseHandler = require('./baseHandler');
 
 module.exports = (req, res) => {
     if (req.pathname === '/' && req.method === 'GET') {
@@ -8,10 +9,7 @@ module.exports = (req, res) => {
                 console.log(err)
                 return
             }
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            })
-            res.end(data)
+            baseHandler.responseOk(res, 'text/html', data)
         })
     } else {
         return true

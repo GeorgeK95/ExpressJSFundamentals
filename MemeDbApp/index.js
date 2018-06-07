@@ -2,7 +2,7 @@ const http = require('http')
 const url = require('url')
 const handlers = require('./handlers/handlerBlender')
 const db = require('./config/dataBase')
-const port = 2323
+const port = process.env.PORT || 2323
 
 db.load().then(() => {
     console.log('testing')
@@ -16,7 +16,7 @@ db.load().then(() => {
                 }
             }
         })
-        .listen(port)
+        .listen(process.env.PORT || port)
     console.log('Im listening on ' + port)
 }).catch(() => {
     console.log('Failed to load DB')

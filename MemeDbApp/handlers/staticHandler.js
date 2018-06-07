@@ -1,5 +1,6 @@
 const fs = require('fs')
 const filePath = './public/images/favicon.ico'
+const baseHandler = require('./baseHandler');
 
 let typeChecker = path => {
     let support = {
@@ -7,7 +8,8 @@ let typeChecker = path => {
         '.html': 'text/html',
         '.js': 'text/javascript',
         '.png': 'image/png',
-        '.jpg': 'image/jpg'
+        '.jpg': 'image/jpg',
+        '.jpeg': 'image/jpeg'
     }
 
     for (let type in support) {
@@ -25,7 +27,7 @@ let getFavicon = (req, res) => {
             return
         }
         res.writeHead(200, {
-            'Content-Type': 'imaga/x-icon'
+            'Content-Type': 'image/x-icon'
         })
         res.end(data)
     })
@@ -38,22 +40,16 @@ let getStaticFiles = (req, res) => {
     fs.readFile(resPath, (err, data) => {
         if (err) {
             console.log(err)
-            return
+            handler404(req, res)
         }
 
-        res.writeHead(200, {
-            'Content-Type': type,
-            'Content-disposition': `attachment; filename="${type}"`
-        })
-        res.end(data)
+        baseHandler.responseDownloadFile(res, type, data)
     })
 }
 
 let handler404 = (req, res) => {
-
     res.writeHead(404, 'Resource not found')
     res.end()
-
 }
 
 module.exports = (req, res) => {
@@ -62,7 +58,7 @@ module.exports = (req, res) => {
 
     if (req.pathname === '/favicon.ico' && req.method === 'GET') {
         getFavicon(req, res)
-    }  else if (
+    } else if (
         req.pathname.startsWith('/public/') &&
         req.method === 'GET' &&
         type !== true

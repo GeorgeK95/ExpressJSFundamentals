@@ -7,8 +7,6 @@ const gulp = require(webConstants.GULP);
 const minifyHtml = require(webConstants.HTML_MIN_GULP);
 
 //minify html via removing whitespaces and commented code
-// console.log(__dirname + '/gulpfile.js');
-
 gulp.task(webConstants.DEFAULT_STR, [webConstants.MINIFY_HTML_GULP]);
 
 gulp.task(webConstants.MINIFY_HTML_GULP, () => {

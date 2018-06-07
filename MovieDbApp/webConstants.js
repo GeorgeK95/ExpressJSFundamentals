@@ -117,7 +117,7 @@ const MOVIE_POSTER_TEMPLATE = '<div class="movie"> <a href="/movies/details/{{MO
 const MOVIE_DETAILS_TEMPLATE = '<div class="content"> <img src="{{MOVIE_POSTER}}" alt=""/> <h3>Title {{MOVIE_TITLE}}</h3> <h3>Year {{MOVIE_YEAR}}</h3> <p> {{MOVIE_DESCRIPTION}}</p> </div>';
 const REPLACE_ME_TEMPLATE = '<div id="replaceMe">{{replaceMe}}</div>';
 
-const FAILED_TO_ADD__MOVIE_TEMPLATE = '<div id="succssesBox"><h2 id="succssesMsg">Movie Added</h2></div>';
+const FAILED_TO_ADD_MOVIE_TEMPLATE = '<div id="errBox"><h2 id="errMsg">Please fill all fields</h2></div>';
 const SUCCESSFULLY_ADDED_MOVIE_TEMPLATE = '<div id="succssesBox"><h2 id="succssesMsg">Movie Added</h2></div>';
 
 module.exports = {
@@ -219,5 +219,6 @@ module.exports = {
     MOVIE_POSTER_TEMPLATE,
     MOVIE_DETAILS_TEMPLATE,
     SUCCESSFULLY_ADDED_MOVIE_TEMPLATE,
+    FAILED_TO_ADD_MOVIE_TEMPLATE,
     REPLACE_ME_TEMPLATE
 };

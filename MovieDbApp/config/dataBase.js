@@ -29,6 +29,6 @@ let db = [
     moviePoster: 'https://images-na.ssl-images-amazon.com/images/M/MV5BNTg2NzBmYTEtMTdiNS00OTg0LWJmMzMtYTZhYzY2MjBlMjFmXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SY1000_CR0,0,675,1000_AL_.jpg',
     movieDescription: 'A young boy and his dog find themselves the target of the Ming: a foreign dynasty that will stop at nothing. One day, a quiet and solemn warrior crosses their path, and becomes irrevocably connected with the two. A deal is struck and the warrior agrees to take the boy to a remote, Buddhist temple, where a kind monk is waiting to care for him and the dog. Unfortunately, the Ming have sent their elite, and they will test their strength, courage, and quality every step of the way.'
   }
-]
+];
 
-module.exports = db
+module.exports = db;
