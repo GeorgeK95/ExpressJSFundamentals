@@ -1,5 +1,10 @@
- const homeHandler = require('./homeHandler')
+const homeHandler = require('./homeHandler')
 const memeHandler = require('./memeHandler')
-const staticHandler = require('./staticHandler')
+const genreHandler = require('./genreHandler')
+// const staticHandler = require('./staticHandler')
 
-module.exports = [homeHandler, memeHandler, staticHandler]
+module.exports = {
+    home: homeHandler,
+    meme: memeHandler,
+    genre: genreHandler
+};

@@ -1,161 +1,77 @@
-const VIEW_ALL_FILE_PATH = './views/viewAll.html'
-const DETAILS_FILE_PATH = './views/details.html'
-const ADD_MEME_FILE_PATH = './views/addMeme.html'
-const REPLACE_ME_STR = '<div id="replaceMe">{{replaceMe}}</div>';
-const CONTENT_TYPE_HTML = 'text/html';
-const IMAGES_COUNT = 5; //1000
-const DB_PATH = __dirname + '/../db/db.json';
+const Meme = require('../models/Meme')
+const Genre = require('../models/Genre')
 
-let db = require('../db/db.json');
-const fs = require('fs');
-const url = require('url');
-const formidable = require('formidable');
-const shortId = require('shortid');
-const mv = require('mv');
-
-const baseHandler = require('./baseHandler');
-
-module.exports = (req, res) => {
-    if (req.pathname === '/viewAllMemes' && req.method === 'GET') {
-        viewAll(req, res)
-    } else if (req.pathname === '/addMeme' && req.method === 'GET') {
-        viewAddMeme(req, res)
-    } else if (req.pathname === '/addMeme' && req.method === 'POST') {
-        addMeme(req, res)
-    } else if (req.pathname.startsWith('/getDetails') && req.method === 'GET') {
-        getDetails(req, res)
-    } else {
-        return true
-    }
+module.exports.addMemeGet = (req, res) => {
+    addMeme(req, res)
 }
 
-function addMeme(req, res) {
-    let form = new formidable.IncomingForm();
-
-    form.parse(req, function (err, fields, files) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        let tempPath = form.openedFiles[0].path;
-        let fileName = form.openedFiles[0].name;
-        let ext = fileName.substr(fileName.lastIndexOf('.'));
-
-        let memeStorage = __dirname.concat(['/../public/memeStorage/']);
-
-        fs.readdir(memeStorage, (err, files) => {
-            let lastFolderIndex = files.length - 1;
-            memeStorage += lastFolderIndex;
-
-            fs.readdir(memeStorage, (err, innerFiles) => {
-                let folderDirectoriesCount = innerFiles.length;
-
-                if (folderDirectoriesCount >= IMAGES_COUNT) {
-                    memeStorage = memeStorage.substr(0, memeStorage.lastIndexOf('/')) + '/'
-                    memeStorage += files.length;
-
-                    fs.mkdir(memeStorage, () => {
-                        console.log('new folder !');
-
-                        processMeme(lastFolderIndex + 1, ext, tempPath, fields, res)
-                    });
-                } else {
-                    processMeme(lastFolderIndex, ext, tempPath, fields, res)
-                }
-            });
-        })
-
-
-    })
+module.exports.addMemePost = (req, res) => {
+    addMemeProcess(req, res)
 }
 
-function processMeme(folderDirectoriesCount, ext, tempPath, fields, res) {
-    const imageFullPath = __dirname.concat(
-        ['/../public/memeStorage/' + folderDirectoriesCount + '/' + shortId.generate() + ext]
-    );
+module.exports.viewAll = (req, res) => {
+    viewAll(req, res)
+}
 
-    mv(tempPath, imageFullPath, function (err) {
-        if (err) console.log(err);
+module.exports.getDetails = (req, res) => {
+    getDetails(req, res)
+}
 
-        let meme = {
-            id: shortId.generate(),
-            title: fields.memeTitle,
-            memeSrc: imageFullPath.substr(__dirname.length + 2),
-            description: fields.memeDescription,
-            privacy: fields.status === undefined ? 'off' : fields.status,
-            dateStamp: Date.now()
-        }
+module.exports.deleteMeme = (req, res) => {
+    deleteMeme(req, res)
+}
 
-        fs.readFile(DB_PATH, (err, data) => {
-            if (err) {
-                console.log(err)
-                return
+function addMemeProcess(req, res) {
+    let meme = req.body;
+
+    let ext = req.file.originalname.substr(req.file.originalname.lastIndexOf('.'))
+
+    meme.path = '.' + req.file.destination.substr(req.file.destination.indexOf('/public'))
+            .concat(req.file.filename)
+
+    meme.status = req.body.status === 'on';
+
+    Meme.create(meme).then((createdMeme) => {
+        Genre.findOneAndUpdate(
+            {"genreName": meme.genres},
+            {"$push": {"memeList": createdMeme._id}},
+            function (err, mango) {
+                if (err) console.log(err);
             }
+        );
 
-            let json = JSON.parse(data)
-            json.push(meme)
-
-            fs.writeFile(DB_PATH, JSON.stringify(json), () => {
-                baseHandler.responseFound(res, CONTENT_TYPE_HTML, '/');
-            })
-        })
+        res.redirect('/')
     });
 }
 
-function viewAddMeme(req, res) {
-    processGetRequest(ADD_MEME_FILE_PATH, '', res)
+function addMeme(req, res) {
+    Genre.find({}, (err, allGenres) => {
+        res.render('addMeme', {genres: allGenres})
+    })
 }
-
 function getDetails(req, res) {
-    let url_parts = url.parse(req.url, true);
-    let query = url_parts.query;
-    let currentMeme = db.filter(m => m.id === query.id)[0]
+    let queryId = req._parsedUrl['query'].substr(3)
 
-    let currentMemeHtml = `<div class="content">
-             <img src="${currentMeme.memeSrc}" alt=""/>
-             <h3>Title  ${currentMeme.title}</h3>
-                 <p> ${currentMeme.description}</p>
-             <button><a href="${currentMeme.memeSrc}">Download Meme</a></button>
-             </div>`
-
-    processGetRequest(DETAILS_FILE_PATH, currentMemeHtml, res)
+    Meme.find({_id: queryId}, (err, foundMeme) => {
+        res.render('details', {foundMeme: foundMeme})
+    })
 }
 
 function viewAll(req, res) {
-
-    fs.readFile(__dirname + '/../db/db.json', 'utf-8', (err, data) => {
-        if (err) {
-            console.log(err)
-            return
-        }
-
-        db = JSON.parse(data);
-        let replaceContent = '';
-
-        for (let currentMeme of db) {
-            if (currentMeme.privacy !== 'on') continue
-
-            replaceContent += `<div class="meme">
-                               <a href="/getDetails?id=${currentMeme.id}">
-                               <img class="memePoster" src="${currentMeme.memeSrc}"/>
-                               </div>`;
-        }
-
-        processGetRequest(VIEW_ALL_FILE_PATH, replaceContent, res)
+    Meme.find({}, (err, allMemes) => {
+        res.render('viewAll', {memes: allMemes})
     })
 }
 
-function processGetRequest(pathToFile, replaceContent, res) {
-    fs.readFile(pathToFile, (err, data) => {
+function deleteMeme(req, res) {
+    let memeId = req.body.id
+
+    Meme.remove({_id: memeId}, function (err) {
         if (err) {
-            console.log(err)
-            return
+            console.log(err);
+            res.json({'result': 'fail'});
         }
 
-        if (replaceContent !== '') data = data.toString().replace(REPLACE_ME_STR, replaceContent);
-
-        baseHandler.responseOk(res, CONTENT_TYPE_HTML, data);
+        res.json({'result': 'success'});
     })
 }
-
