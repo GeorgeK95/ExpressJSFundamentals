@@ -46,20 +46,20 @@ function addMemeProcess(req, res) {
 
 function addMeme(req, res) {
     Genre.find({}, (err, allGenres) => {
-        res.render('addMeme', {genres: allGenres})
+        res.render('meme/addMeme', {genres: allGenres})
     })
 }
 function getDetails(req, res) {
     let queryId = req._parsedUrl['query'].substr(3)
 
     Meme.find({_id: queryId}, (err, foundMeme) => {
-        res.render('details', {foundMeme: foundMeme})
+        res.render('meme/details', {foundMeme: foundMeme})
     })
 }
 
 function viewAll(req, res) {
     Meme.find({}, (err, allMemes) => {
-        res.render('viewAll', {memes: allMemes})
+        res.render('meme/viewAll', {memes: allMemes})
     })
 }
 
