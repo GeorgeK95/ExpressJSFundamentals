@@ -16,5 +16,6 @@ let app = express();
 db(config[env]);
 require('./config/express')(app, config[env]);
 require('./config/routes')(app);
+require('./config/passport')();
 
 app.listen(webConstants.SERVER_PORT);

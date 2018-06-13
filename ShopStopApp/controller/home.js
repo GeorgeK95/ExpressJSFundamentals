@@ -16,7 +16,7 @@ module.exports.index = (req, res) => {
     let queryData = req.query;
     let targetStr = queryData.query;
 
-    Product.find().populate(webConstants.CATEGORY_STR.toLowerCase()).then((result) => {
+    Product.find({buyer: null}).populate(webConstants.CATEGORY_STR.toLowerCase()).then((result) => {
         if (targetStr) result = result.filter(p => p.name.toLowerCase().includes(targetStr));
 
         let data = {products: result};

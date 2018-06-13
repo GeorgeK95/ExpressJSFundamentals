@@ -27,4 +27,5 @@ module.exports = (config) => {
 
     require(webConstants.PRODUCT_MODEL_PATH);
     require(webConstants.CATEGORY_MODEL_PATH);
+    require('../model/User').seedAdminUser();
 };

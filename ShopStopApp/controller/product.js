@@ -23,6 +23,7 @@ module.exports.addGet = (req, res) => {
 module.exports.addPost = (req, res) => {
     let product = req.body;
     product.image = webConstants.DOUBLE_SLASH_STR + req.file.path;
+    product.creator = req.user._id;
 
     Product.create(product).then((insertedProduct) => {
         Category.findById(product.category).then(category => {
@@ -46,9 +47,13 @@ module.exports.editGet = (req, res) => {
             return;
         }
 
-        Category.find().then((categories) => {
-            res.render(webConstants.EDIT_PRODUCT_VIEW, {product: product, categories: categories});
-        })
+        if (product.creator.equals(req.user._id) || req.user.roles.indexOf('Admin') > -1) {
+            Category.find().then((categories) => {
+                res.render(webConstants.EDIT_PRODUCT_VIEW, {product: product, categories: categories});
+            })
+        } else {
+            res.redirect(`/?error=${encodeURIComponent('You are can only view this product!!!')}`);
+        }
     });
 };
 
@@ -106,17 +111,16 @@ module.exports.deleteGet = (req, res) => {
     let id = req.params.id;
 
     Product.findById(id).then((product) => {
-        if (!product /*|| product.buyer !== undefined*/) {
+        if (!product || product.buyer !== undefined) {
             res.sendStatus(webConstants.STATUS_NOT_FOUND);
             return;
         }
 
-        res.render(webConstants.DELETE_PRODUCT_VIEW, {product: product});
-
-        /*if (product.creator.equals(req.user._id) || req.user.roles.indexOf('Admin') >= 0) {
-         } else {
-         res.redirect(`/?error=${encodeURIComponent('You are can only view this product!!!')}`);
-         }*/
+        if (product.creator.equals(req.user._id) || req.user.roles.indexOf('Admin') >= 0) {
+            res.render(webConstants.DELETE_PRODUCT_VIEW, {product: product});
+        } else {
+            res.redirect(`/?error=${encodeURIComponent('You are can only view this product!!!')}`);
+        }
     });
 };
 
@@ -124,21 +128,20 @@ module.exports.deletePost = (req, res) => {
     let id = req.params.id;
 
     Product.findById(id).then((product) => {
-        /*if (!product) {
-         res.redirect(`/?error=${encodeURIComponent('error=Product was not found!')}`);
-         return;
-         }*/
+        if (!product) {
+            res.redirect(`/?error=${encodeURIComponent('error=Product was not found!')}`);
+            return;
+        }
 
-        fs.unlink(webConstants.DOT_STR + product.image, err => {
-            if (err) console.log(err);
-        });
+        if (product.creator.equals(req.user._id) || req.user.roles.indexOf('Admin') >= 0) {
+            fs.unlink(webConstants.DOT_STR + product.image, err => {
+                if (err) console.log(err);
+            });
 
-        Product.remove(product).then(() => {
-            res.redirect(webConstants.SUCCESSFULLY_DELETED_PRODUCT_URL);
-        });
-
-        /*if (product.creator.equals(req.user._id) || req.user.roles.indexOf('Admin') >= 0) {
-         }*/
+            Product.remove(product).then(() => {
+                res.redirect(webConstants.SUCCESSFULLY_DELETED_PRODUCT_URL);
+            });
+        }
     });
 };
 
@@ -152,5 +155,25 @@ module.exports.buyGet = (req, res) => {
         }
 
         res.render(webConstants.BUY_PRODUCT_VIEW, {product: product});
+    });
+};
+
+module.exports.buyPost = (req, res) => {
+    let productId = req.params.id;
+
+    Product.findById(productId).then((product) => {
+        if (product.buyer) {
+            let error = `error=${encodeURIComponent('Product was already bought!')}`;
+            res.redirect(`/?${error}`);
+            return;
+        }
+
+        product.buyer = req.user.id;
+        product.save().then(() => {
+            req.user.boughtProducts.push(productId);
+            req.user.save().then(() => {
+                res.redirect('/');
+            });
+        });
     });
 };

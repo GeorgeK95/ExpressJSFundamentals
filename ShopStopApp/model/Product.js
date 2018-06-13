@@ -15,8 +15,9 @@ let schema = mongoose.Schema({
         default: webConstants.ZERO
     },
     image: {type: mongoose.Schema.Types.String, required: true},
-    isBought: {type: mongoose.Schema.Types.Boolean, default: true},
-    category: {type: mongoose.Schema.Types.ObjectId, ref: webConstants.CATEGORY_STR},
+    creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    buyer: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    category: {type: mongoose.Schema.Types.ObjectId, ref: webConstants.CATEGORY_STR, required: true},
 });
 
 let Product = mongoose.model(webConstants.PRODUCT_STR, schema);

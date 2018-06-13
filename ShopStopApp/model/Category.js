@@ -7,6 +7,7 @@ const mongoose = require(webConstants.MONGOOSE);
 
 let schema = mongoose.Schema({
     name: {type: mongoose.Schema.Types.String, required: true, unique: true},
+    creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     products: [
         {type: mongoose.Schema.ObjectId, ref: webConstants.PRODUCT_STR}
     ]

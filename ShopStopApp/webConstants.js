@@ -59,15 +59,15 @@ const MV_MODULE = 'mv';
 const MULTIPARTY_MODULE = 'multiparty';
 const SHORTID_MODULE = 'shortid';
 
-//handler paths
+//controller paths
 const BASE_HANDLER_PATH = './base';
 const HOME_HANDLER_PATH = './home';
 const STATIC_FILES_HANDLER_PATH = './static';
 const PRODUCT_HANDLER_PATH = './product';
 const CATEGORY_HANDLER_PATH = './category';
-const INDEX_HANDLER_PATH = './handler/index';
+const INDEX_HANDLER_PATH = './controller/index';
 
-const HANDLERS_PATH = '../handler';
+const CONTROLLERS_PATH = '../controller';
 
 //db
 const DB_PATH = './config/database.config';
@@ -168,11 +168,11 @@ module.exports = {
     INDEX_HTML_PATH,
     PRODUCT_HTML_PATH,
     ADD_CATEGORY_HTML_PATH,
-    //handlers paths
+    //controllers paths
     BASE_HANDLER_PATH,
     INDEX_HANDLER_PATH,
     HOME_HANDLER_PATH,
-    HANDLERS_PATH,
+    CONTROLLERS_PATH,
     STATIC_FILES_HANDLER_PATH,
     PRODUCT_HANDLER_PATH,
     CATEGORY_HANDLER_PATH,
