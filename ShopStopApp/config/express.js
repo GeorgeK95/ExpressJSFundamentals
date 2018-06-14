@@ -19,7 +19,7 @@ module.exports = (app, config) => {
     app.use(bodyParser.urlencoded({extended: true}));
 
     app.use(cookieParser());
-    app.use(session({sectet: 'secret', saveUninitialized: false, resave: false}));
+    app.use(session({secret: 'secret', saveUninitialized: false, resave: false}));
     app.use(passport.initialize());
     app.use(passport.session());
 

@@ -38,5 +38,7 @@ module.exports = (app) => {
     app.get('/user/login', controllers.user.loginGet);
     app.post('/user/login', controllers.user.loginPost);
 
-    app.get('/user/logout', auth.isAuthenticated, controllers.user.loginGet);
+    app.get('/user/login', auth.isAuthenticated, controllers.user.loginGet);
+
+    app.post('/user/logout', controllers.user.logout);
 };

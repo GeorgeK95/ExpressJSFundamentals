@@ -3,7 +3,7 @@
  */
 
 const User = require('../model/User');
-const ecription = require('../util/encription');
+const encryption = require('../util/encryption');
 
 module.exports.registerGet = (req, res) => {
     res.render('user/register');

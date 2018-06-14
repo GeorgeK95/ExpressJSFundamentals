@@ -4,7 +4,7 @@
 
 const webConstants = require('../webConstants');
 const mongoose = require(webConstants.MONGOOSE);
-const encryption = require('../utils/encryption');
+const encryption = require('../util/encryption');
 const propertyIsRequired = '{0} is required.';
 
 let userSchema = mongoose.Schema({
@@ -67,7 +67,7 @@ module.exports.seedAdminUser = () => {
     User.find({username: 'admin'}).then(users => {
         if (users.length === 0) {
             let salt = encryption.generateSalt()
-            let hashedPass = encryption.generatedHashedPassword(salt, 'Admin12')
+            let hashedPass = encryption.generateHashedPassword(salt, 'Admin12')
 
             User.create({
                 username: 'admin',
