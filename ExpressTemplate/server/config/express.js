@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 const handlebars = require('express-handlebars')
+const auth = require('../config/auth')
 
 module.exports = (app) => {
     app.engine('.hbs', handlebars({
@@ -24,6 +25,10 @@ module.exports = (app) => {
     app.use((req, res, next) => {
         if (req.user) {
             res.locals.currentUser = req.user
+
+            if (req.isAuthenticated() && req.user.roles.indexOf('Admin') > -1) {
+                res.locals.currentUser.isAdmin = true
+            }
         }
 
         next()

@@ -2,15 +2,25 @@ const encryption = require('../utilities/encryption')
 const User = require('mongoose').model('User')
 
 module.exports = {
+    admin: (req, res) => {
+        res.render('admin/admin')
+    },
     registerGet: (req, res) => {
         res.render('users/register')
     },
     registerPost: (req, res) => {
         let reqUser = req.body
-        reqUser.salt = encryption.generateSalt()
-        reqUser.hashedPass = encryption.generateHashedPassword(reqUser.salt, reqUser.password)
 
-        User.create(reqUser).then(user => {
+        let salt = encryption.generateSalt()
+        let hashedPassword = encryption.generateHashedPassword(salt, reqUser.password)
+
+        User.create({
+            username: reqUser.username,
+            firstName: reqUser.firstName,
+            lastName: reqUser.lastName,
+            salt: salt,
+            hashedPass: hashedPassword
+        }).then(user => {
             req.logIn(user, (err, user) => {
                 if (err) {
                     res.locals.globalError = err

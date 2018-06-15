@@ -4,13 +4,17 @@ const auth = require('./auth')
 module.exports = (app) => {
     app.get('/', controllers.home.index)
 
+    //protected for logged only
     app.get('/about', auth.isAuthenticated, controllers.home.about)
 
-    app.get('/users/register', controllers.users.registerGet)
-    app.post('/users/register', controllers.users.registerPost)
+    //protected for admin only
+    app.get('/admin', auth.isInRole('Admin'), controllers.users.admin)
 
-    app.get('/users/login', controllers.users.loginGet)
-    app.post('/users/login', controllers.users.loginPost)
+    app.get('/users/register', auth.isAnonymous, controllers.users.registerGet)
+    app.post('/users/register', auth.isAnonymous, controllers.users.registerPost)
+
+    app.get('/users/login', auth.isAnonymous, controllers.users.loginGet)
+    app.post('/users/login', auth.isAnonymous, controllers.users.loginPost)
 
     app.post('/users/logout', controllers.users.logout)
 

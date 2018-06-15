@@ -23,6 +23,13 @@
             <li class="nav-item">
                 <a class="nav-link" style="color: white" href="/about">About</a>
             </li>
+            {{#if currentUser}}
+                {{#if currentUser.isAdmin}}
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white" href="/admin">Admin panel</a>
+                    </li>
+                {{/if}}
+            {{/if}}
         </ul>
         <ul class="navbar-nav">
             {{#if currentUser}}
@@ -57,4 +64,6 @@
 </div>
 
 </body>
+
+<footer class="blockquote-footer text-center">ExpressJS exam 2018</footer>
 </html>

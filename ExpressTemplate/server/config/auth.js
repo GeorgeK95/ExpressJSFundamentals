@@ -1,4 +1,11 @@
 module.exports = {
+    isAnonymous: (req, res, next) => {
+        if (!req.isAuthenticated()) {
+            next()
+        } else {
+            res.redirect('/?successMsg="You are already logged."')
+        }
+    },
     isAuthenticated: (req, res, next) => {
         if (req.isAuthenticated()) {
             next()
