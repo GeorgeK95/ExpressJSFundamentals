@@ -11,13 +11,19 @@ module.exports = {
     registerPost: (req, res) => {
         let reqUser = req.body
 
+        if (!reqUser.password || reqUser.password !== reqUser.confirm) {
+            res.locals.globalError = 'Invalid credentials.';
+            res.render('users/register', reqUser);
+            return;
+        }
+
         let salt = encryption.generateSalt()
         let hashedPassword = encryption.generateHashedPassword(salt, reqUser.password)
 
         User.create({
             username: reqUser.username,
-            firstName: reqUser.firstName,
-            lastName: reqUser.lastName,
+            /*firstName: reqUser.firstName,
+             lastName: reqUser.lastName,*/
             salt: salt,
             hashedPass: hashedPassword
         }).then(user => {
@@ -34,13 +40,14 @@ module.exports = {
             res.locals.globalError = 'Please choose another username, this is busy!'
 
             if (err.name === 'ValidationError') {
-                let errorMessages = ''
+                res.locals.globalError = err
+                /*let errorMessages = ''
 
-                for (field in err.errors) errorMessages += capitalize(field) + ' is required.\r\n'
+                 for (field in err.errors) errorMessages += capitalize(field) + ' is required.\r\n'
 
-                if (!reqUser.password) errorMessages += capitalize('password') + ' is required.\r\n'
+                 if (!reqUser.password) errorMessages += capitalize('password') + ' is required.\r\n'
 
-                res.locals.globalError = errorMessages
+                 res.locals.globalError = errorMessages*/
             }
 
             res.render('users/register', reqUser)
@@ -81,6 +88,7 @@ module.exports = {
     }
 }
 
-function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1)
-}
+/*
+ function capitalize(string) {
+ return string.charAt(0).toUpperCase() + string.slice(1)
+ }*/

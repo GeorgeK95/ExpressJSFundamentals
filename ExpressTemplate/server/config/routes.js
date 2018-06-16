@@ -18,6 +18,12 @@ module.exports = (app) => {
 
     app.post('/users/logout', controllers.users.logout)
 
+    app.get('/unauthorized', (req, res) => {
+        res.status(403)
+        res.send('403 Unauthorized!')
+        res.end()
+    })
+
     app.all('*', (req, res) => {
         res.status(404)
         res.send('404 Not Found!')
