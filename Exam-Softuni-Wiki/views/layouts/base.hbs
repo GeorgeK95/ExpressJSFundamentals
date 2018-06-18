@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Wiki</title>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+
+<body>
+
+<div>
+    <aside>
+        <div class="center">
+            <img class="logo" src="/img/logo.png" alt="logo">
+        </div>
+
+        <nav>
+            <a href="/">Main Page</a>
+            <a href="/article/all">All Articles</a>
+            <a href="/article/create">Create New Article</a>
+
+            <form method="post" action="/article/search">
+                <input type="text" name="search">
+                <input type="submit" value="Search">
+            </form>
+        </nav>
+    </aside>
+
+    <div id="container">
+        <header>
+            {{#if currentUser}}
+                <span>Welcome, {{currentUser.email}}!</span>
+
+                <form id="logout-form" action="/users/logout" method="POST"></form>
+                <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
+
+            {{else}}
+                <a href="/users/login">Login</a>
+                <a href="/users/register">Register</a>
+            {{/if}}
+
+        </header>
+
+        <main>
+            <h1>Welcome to SoftUni Wiki!</h1>
+
+            <div class="container">
+                {{#if globalError}}
+                    <h3 style="text-align: center; padding-top: 10px; color: red">{{globalError}}</h3>
+                {{/if}}
+                {{#if globalSuccess}}
+                    <h3 style="text-align: center;padding-top: 10px; color: green">{{globalSuccess}}</h3>
+                {{/if}}
+            </div>
+
+            {{{body}}}
+        </main>
+
+        <footer>
+            SoftUni Wiki &copy; 2018
+        </footer>
+    </div>
+</div>
+
+
+</body>
+
+</html>

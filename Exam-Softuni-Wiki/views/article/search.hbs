@@ -1,0 +1,10 @@
+<h2>Search results for: "{{searched}}"</h2>
+<div class="spacer" style="margin-top: 10px">
+    <ul>
+        {{#each articles}}
+            <li>
+                <a href="/article/{{_id}}">{{title}}</a>
+            </li>
+        {{/each}}
+    </ul>
+</div>

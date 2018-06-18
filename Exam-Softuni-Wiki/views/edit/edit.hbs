@@ -1,0 +1,27 @@
+<section>
+    <h2>Edit article
+        {{#if currentUser}}
+            {{#if currentUser.isAdmin}}
+                <div class="controls">
+                    <form id="unlock-form" action="/article/unlock/{{artId}}" method="POST"></form>
+                    {{#if article.isLocked}}
+                        <a href="javascript:document.getElementById('unlock-form').submit()">Unlock article</a>
+                    {{/if}}
+                    <form id="lock-form" action="/article/lock/{{artId}}" method="POST"></form>
+                    {{#unless article.isLocked}}
+                        <a href="javascript:document.getElementById('lock-form').submit()">Lock article</a>
+                    {{/unless}}
+                </div>
+            {{/if}}
+        {{/if}}
+    </h2>
+    <div class="spacer">
+        <form method="post">
+            <label>Article title</label>
+            <h3>{{article.title}}</h3>
+            <label>Content</label>
+            <textarea name="content">{{edit.content}}</textarea>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</section>
